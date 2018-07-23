@@ -33,6 +33,8 @@ sudo python setup.py install
 
 sudo pip install pytest
 
+sudo pip install future
+
 Three folders are being tested
 	sdram_noled
 		Removed the Led digits to be able to use verilator
