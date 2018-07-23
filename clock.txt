@@ -1,0 +1,39 @@
+pi@mypi3-5:~ $ icepll -i 100 -o 50
+
+F_PLLIN:   100.000 MHz (given)
+F_PLLOUT:   50.000 MHz (requested)
+F_PLLOUT:   50.000 MHz (achieved)
+
+FEEDBACK: SIMPLE
+F_PFD:  100.000 MHz
+F_VCO:  800.000 MHz
+
+DIVR:  0 (4'b0000)
+DIVF:  7 (7'b0000111)
+DIVQ:  4 (3'b100)
+
+FILTER_RANGE: 5 (3'b101)
+
+
+	wire	clk_50mhz, pll_locked;
+	SB_PLL40_CORE #(
+		.FEEDBACK_PATH("SIMPLE"),
+		.DELAY_ADJUSTMENT_MODE_FEEDBACK("FIXED"),
+		.DELAY_ADJUSTMENT_MODE_RELATIVE("FIXED"),
+		.PLLOUT_SELECT("GENCLK"),
+		.FDA_FEEDBACK(4'b1111),
+		.FDA_RELATIVE(4'b1111),
+		.DIVR(4'b0000),		// Divide by (DIVR+1)
+		.DIVQ(3'b100),		// Divide by 2^(DIVQ)
+		.DIVF(7'b0000111),		// Multiply by (DIVF+1)
+		.FILTER_RANGE(3'b001)
+	) plli (
+		.REFERENCECLK    (inp_clk        ),
+		.PLLOUTCORE     (clk_50mhz    ),
+		.LOCK           (pll_locked  ),
+		.BYPASS         (1'b0         ),
+		.RESETB         (1'b1         )
+	); 
+	assign master_clk_i = clk_50mhz;
+
+	

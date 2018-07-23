@@ -1,0 +1,62 @@
+07/21/18
+Tesing sdram code
+Needed to install both myhdl & rhea
+
+cd ~/myhdl/
+
+commit a311468f631094bb1a013612cc20c0f7583721b9
+Merge: b210708 042c76a
+Author: jandecaluwe <jan@jandecaluwe.com>
+Date:   Sat Mar 17 18:13:48 2018 +0100
+
+    Merge pull request #257 from NicoPy/patch-8
+    
+    intbv.unsigned() internal enhancement
+    
+
+
+sudo python setup.py install
+
+cd ~/rhea/
+
+commit 4d1c50532d1c6a44bc614f1dbbec16eb716488d6
+Author: Nick Shaffner <nshaffner@gmail.com>
+Date:   Tue Aug 16 04:10:14 2016 -0700
+
+    Remove phantom warnings in verilog conversion related to Xilinx device_clock_mgmt_prim (#54)
+    
+    * Remove phantom warnings related to Xilinx device_clock_mgmt_prim
+    
+    * Also removed phantom conversion warning about clockin not being readcd ~/rhea/
+
+sudo python setup.py install
+
+sudo pip install pytest
+
+Three folders are being tested
+	sdram_noled
+		Removed the Led digits to be able to use verilator
+	led_sdram
+		Original Code
+	uart_led_sdram	
+		Starting with the sdram_test.v from the led_sdram 
+		Added a PLL and UART.
+		
+
+python sdram_test.py 
+creates sdram.v & sdram_test_tb.vcd when line 197 is uncommented
+
+python sdram_test.py > ~/e8de5745e1f8daa979b789ad7bd366e1/sdram_sim.txt
+sdram_test.py:220: UserWarning: 
+    traceSignals(): Deprecated usage: See http://dev.myhdl.org/meps/mep-114.html
+  Simulation(traceSignals(sdram_test_tb)).run()
+sdram_test.py:231: UserWarning: 
+    toVerilog(): Deprecated usage: See http://dev.myhdl.org/meps/mep-114.html
+  d7.driver(), led_status, pb, sd_intf_inst)
+/usr/local/lib/python2.7/dist-packages/myhdl-1.0.dev0-py2.7.egg/myhdl/conversion/_toVerilog.py:349: ToVerilogWarning: Signal is not driven: led_disp_inst_digit_all_i
+  category=ToVerilogWarning
+/usr/local/lib/python2.7/dist-packages/myhdl-1.0.dev0-py2.7.egg/myhdl/conversion/_toVerilog.py:327: ToVerilogWarning: Signal is driven but not read: sdramCntl_inst_host_intf_rdPending_o
+  category=ToVerilogWarning
+  
+make creates the sdram_test.bin
+This is what is reported with icetime Timing estimate: 12.06 ns (82.93 MHz)
