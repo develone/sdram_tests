@@ -68,5 +68,5 @@ set_io sdramCntl_inst_sd_intf_addr[10] F14
 set_io sdramCntl_inst_sd_intf_addr[11] F16
 #'G14',                          12 from rhea/rhea/boards/lattice/_catboard.py
 set_io sdramCntl_inst_sd_intf_addr[12] G14
-set_io o_uart_tx T14
+
  
