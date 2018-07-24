@@ -53,7 +53,7 @@ int main(int argc, char** argv, char** env) {
 	while (!Verilated::gotFinish()) { 
 		uut->eval(); 
 		main_time += 6000;
-		printf("tfp 0x%llx \n",main_time);
+		printf("main_time 0x%llx \n",main_time);
 		tfp->dump (main_time);
 		}
 	delete uut;
