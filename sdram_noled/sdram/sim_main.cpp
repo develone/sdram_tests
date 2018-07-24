@@ -21,26 +21,43 @@ end
 #include "verilated.h"
 
 #include "verilated_vcd_c.h"
+//These headers were taken from promach cordic code
 
-
-FILE * tfp;
-int main_time;
+//none of the fix the not compile
+//It appears the one that created the fix was
+//Instantiation of module as uut
+//#include <iostream>
+//#include <string>
+//#include <cstdlib>
+//#include <cstdio>
+//#include <bitset>
+//#include <limits>
+//#include <iomanip>
+//#include <typeinfo>
+Vsdram_test *uut;                     // Instantiation of module
+ 
+vluint64_t main_time;
 int main(int argc, char** argv, char** env) {
+	// turn on trace or not?
+    //bool vcdTrace = false;
+    VerilatedVcdC* tfp = new VerilatedVcdC;
+    
 	Verilated::commandArgs(argc,argv);
 	Verilated::traceEverOn(true);
-	
-	Vsdram_test* top = new Vsdram_test;
-	tfp =  fopen("obj_dir/sdram_test.vcd","w");
+	uut = new Vsdram_test;   // Create instance
+	//file is now being opened 
+	tfp->open("obj_dir/sdram_test.vcd");
 	printf("tfp 0x%x \n",tfp);
 	 
 	 
 	while (!Verilated::gotFinish()) { 
-		top->eval(); 
-		main_time += 1;
-		//tfp->dump (main_time);
+		uut->eval(); 
+		main_time += 6000;
+		printf("tfp 0x%llx \n",main_time);
+		tfp->dump (main_time);
 		}
-	delete top;
+	delete uut;
 	
-	//tfp->close();
+	tfp->close();
 	exit(0);
 }
