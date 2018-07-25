@@ -1,0 +1,16 @@
+54c54
+< VERILATOR_FLAGS += -Wno-WIDTH
+---
+> 
+64c64
+< 	$(VERILATOR) $(VERILATOR_FLAGS) -f input.vc sdram_test.v sim_main.cpp
+---
+> 	$(VERILATOR) $(VERILATOR_FLAGS) -f input.vc top.v sim_main.cpp
+70c70
+< #	$(MAKE) -j 4 -C obj_dir -f Vsdram_test.mk
+---
+> #	$(MAKE) -j 4 -C obj_dir -f Vtop.mk
+76c76
+< 	obj_dir/Vsdram_test +trace
+---
+> 	obj_dir/Vtop +trace

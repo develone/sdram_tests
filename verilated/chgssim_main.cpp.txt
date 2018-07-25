@@ -1,0 +1,70 @@
+12,13c12,13
+< // Include model header, generated from Verilating "sdram_test.v"
+< #include "Vsdram_test.h"
+---
+> // Include model header, generated from Verilating "top.v"
+> #include "Vtop.h"
+41,42c41,42
+<     // Construct the Verilated model, from Vsdram_test.h generated from Verilating "sdram_test.v"
+<     Vsdram_test* sdram_test = new Vsdram_test; // Or use a const unique_ptr, or the VL_UNIQUE_PTR wrapper
+---
+>     // Construct the Verilated model, from Vtop.h generated from Verilating "top.v"
+>     Vtop* top = new Vtop; // Or use a const unique_ptr, or the VL_UNIQUE_PTR wrapper
+53c53
+<         sdram_test->trace(tfp, 99);  // Trace 99 levels of hierarchy
+---
+>         top->trace(tfp, 99);  // Trace 99 levels of hierarchy
+60,62c60,67
+<      
+<     sdram_test->master_clk_i = 0;
+<      
+---
+>     top->reset_l = !0;
+>     top->fastclk = 0;
+>     top->clk = 0;
+>     top->in_small = 1;
+>     top->in_quad = 0x1234;
+>     top->in_wide[0] = 0x11111111;
+>     top->in_wide[1] = 0x22222222;
+>     top->in_wide[2] = 0x3;
+69c74
+<         sdram_test->master_clk_i = !sdram_test->master_clk_i;
+---
+>         top->fastclk = !top->fastclk;
+71c76
+<             sdram_test->master_clk_i = 1;
+---
+>             top->clk = 1;
+73c78,88
+<   
+---
+>         if ((main_time % 10) == 8) {
+>             top->clk = 0;
+>         }
+>         if (main_time > 1 && main_time < 10) {
+>             top->reset_l = !1;  // Assert reset
+>         } else {
+>             top->reset_l = !0;  // Deassert reset
+>         }
+> 
+>         // Assign some other inputs
+>         top->in_quad += 0x12;
+76c91
+<         sdram_test->eval();
+---
+>         top->eval();
+84c99,102
+<          
+---
+>         VL_PRINTF ("[%" VL_PRI64 "d] clk=%x rstl=%x iquad=%" VL_PRI64 "x"
+>                    " -> oquad=%" VL_PRI64"x owide=%x_%08x_%08x\n",
+>                    main_time, top->clk, top->reset_l, top->in_quad,
+>                    top->out_quad, top->out_wide[2], top->out_wide[1], top->out_wide[0]);
+88c106
+<     sdram_test->final();
+---
+>     top->final();
+102c120
+<     delete sdram_test; sdram_test = NULL;
+---
+>     delete top; top = NULL;
