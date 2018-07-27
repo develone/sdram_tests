@@ -76,7 +76,7 @@ def memory_test(clk_i, reset_i, status_o, led_status, host_intf):
             rand_load.next = 0
             rand_enable.next = 0
             status_o.next = intbv(ord("3"),0,256)
-            #led_status.next = intbv('0100')[4:0]
+            led_status.next = intbv('0100')[4:0]
             if host_intf.done_o == False:
                 rd_enable.next = True
             else:
@@ -92,10 +92,10 @@ def memory_test(clk_i, reset_i, status_o, led_status, host_intf):
             rand_enable.next = 0
             if error == True:
                 status_o.next = intbv(ord("F"),0,256)
-                #led_status.next = intbv('1000')[4:0]
+                led_status.next = intbv('1000')[4:0]
             else:
                 status_o.next = intbv(ord("O"),0,256)
-                #led_status.next = intbv('1111')[4:0]
+                led_status.next = intbv('1111')[4:0]
 
     @always_comb
     def host_connections():
