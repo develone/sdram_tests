@@ -1,0 +1,23 @@
+python sdcntl.py creates MySdramCntl.v
+yosys
+read_verilog MySdramCntl.v
+synth_ice40
+
+=== MySdramCntl ===
+
+   Number of wires:                313
+   Number of wire bits:            753
+   Number of public wires:          69
+   Number of public wire bits:     462
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                524
+     $_TBUF_                        16
+     SB_CARRY                       42
+     SB_DFFER                       99
+     SB_DFFES                        1
+     SB_DFFR                        54
+     SB_DFFS                         8
+     SB_LUT4                       304
+     
