@@ -19,5 +19,58 @@ synth_ice40
      SB_DFFES                        1
      SB_DFFR                        54
      SB_DFFS                         8
-     SB_LUT4                       304
+     SB_LUT4                       304		3.9%
      
+After removing the Led digit displays  the sdram_test.bin
+appeared to fail since all 4 leds did not light up.
+A diff of sdram_test.py revealed  several led_status.next 
+lines had been commented out by mistake.  Re-running 
+created a new sdram_test.v and bin file that worked as the 
+the one that included the led digit displays.
+=== sdram_test === with drivers for leddigit displays
+
+   Number of wires:                546
+   Number of wire bits:           1201
+   Number of public wires:         131
+   Number of public wire bits:     628
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                850
+     $_TBUF_                        24
+     SB_CARRY                       80
+     SB_DFF                          4
+     SB_DFFE                         5
+     SB_DFFER                       99
+     SB_DFFES                        1
+     SB_DFFESR                      60
+     SB_DFFESS                      13
+     SB_DFFR                        54
+     SB_DFFS                         8
+     SB_DFFSR                        7
+     SB_DFFSS                        8
+     SB_LUT4                       487		6.3%
+
+=== sdram_test ===
+
+   Number of wires:                446
+   Number of wire bits:            983
+   Number of public wires:          83
+   Number of public wire bits:     542
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                732
+     $_TBUF_                        16
+     SB_CARRY                       71
+     SB_DFF                          3
+     SB_DFFE                         4
+     SB_DFFER                       99
+     SB_DFFES                        1
+     SB_DFFESR                      42
+     SB_DFFESS                       3
+     SB_DFFR                        54
+     SB_DFFS                         8
+     SB_DFFSR                        6
+     SB_DFFSS                        5
+     SB_LUT4                       420		5.5%
