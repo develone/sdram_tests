@@ -123,6 +123,12 @@ def sdram_test(master_clk_i, sdram_clk_o, sdram_clk_i,led_status, i_uart_rx, o_u
     state_rx = Signal(t_state_rx.RX_IDLE) 	
  
     clk = Signal(bool(0))
+    dout = Signal(intbv(0)[8:])
+    dout_v = Signal(intbv(0)[8:])
+    din = Signal(intbv(0)[8:])
+    addr = Signal(intbv(0)[7:])
+    we = Signal(bool(0))
+    ram_inst = ram_1(dout, din, addr, we, sdram_clk_o, depth=32)
     
                  
  
@@ -184,22 +190,6 @@ def sdram_test(master_clk_i, sdram_clk_o, sdram_clk_i,led_status, i_uart_rx, o_u
  
     return instances()
 
-@block
-def ram(dout, din, addr, we, i_Clock, depth=32):
-    """  Ram model """
-    
-    mem = [Signal(intbv(0)[8:]) for i in range(depth)]
-    
-    @always(i_Clock.posedge)
-    def write():
-        if we:
-            mem[addr].next = din
-                
-    @always_comb
-    def read():
-        dout.next = mem[addr]
-
-    return write, read
 
 @block    
 def sdram_test_tb():
@@ -208,9 +198,9 @@ def sdram_test_tb():
     w_RX_Byte = Signal(intbv(0)[8:])
     state_tx = Signal(t_state_tx.TX_IDLE)
     state_rx = Signal(t_state_rx.RX_IDLE)
-    dout = Signal(intbv(0)[16:])
-    dout_v = Signal(intbv(0)[15:])
-    din = Signal(intbv(0)[15:])
+    dout = Signal(intbv(0)[8:])
+    dout_v = Signal(intbv(0)[8:])
+    din = Signal(intbv(0)[8:])
     addr = Signal(intbv(0)[7:])
     we = Signal(bool(0))
     ram_inst = ram_1(dout, din, addr, we, clk, depth=32)
