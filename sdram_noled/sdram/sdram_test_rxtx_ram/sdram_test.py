@@ -29,10 +29,12 @@ from SDRAM_Controller.sdram import *
 from SDRAM_Controller.host_intf import *
 from SDRAM_Controller.sd_intf import *
 from rand_gen import uniform_rand_gen
+
 from uart_rx import uart_rx, t_state_rx
+
 from uart_tx import uart_tx, t_state_tx
 from forceHi import forceHi
-from ram import ram_1
+ 
 
 @block
 def memory_test(clk_i, reset_i, status_o, led_status, host_intf):
@@ -116,20 +118,16 @@ def sdram_test(master_clk_i, sdram_clk_o, sdram_clk_i,led_status, i_uart_rx, o_u
     clk50MHz = Signal(bool(0))
     w_TX_Serial = Signal(bool(0))
     w_TX_Active = Signal(bool(0))
+    
     w_RX_DV = Signal(bool(0))
     w_RX_Byte = Signal(intbv(0)[8:])
+    
     o_TX_Done = Signal(bool(0))
     state_tx = Signal(t_state_tx.TX_IDLE)
-    state_rx = Signal(t_state_rx.RX_IDLE) 	
+    state_rx = Signal(t_state_rx.RX_IDLE)
  
     clk = Signal(bool(0))
-    dout = Signal(intbv(0)[8:])
-    dout_v = Signal(intbv(0)[8:])
-    din = Signal(intbv(0)[8:])
-    addr = Signal(intbv(0)[7:])
-    we = Signal(bool(0))
-    ram_inst = ram_1(dout, din, addr, we, sdram_clk_o, depth=32)
-    
+ 
                  
  
 	
@@ -184,26 +182,21 @@ def sdram_test(master_clk_i, sdram_clk_o, sdram_clk_i,led_status, i_uart_rx, o_u
     memory_test_inst = memory_test(clk, reset, test_status, led_status, host_intf_inst)
     
     sdramCntl_inst = SdramCntl(clk, host_intf_inst, sd_intf)
+    """
+    50MHz 1M 1e-06 per bit 10 e-6 per char
+    
+    """
     uart_rx_inst = uart_rx(sdram_clk_o,i_uart_rx,w_RX_DV,w_RX_Byte,state_rx,CLKS_PER_BIT=434)
     uart_tx_inst = uart_tx(sdram_clk_o,w_RX_DV,w_RX_Byte,w_TX_Active,w_TX_Serial,o_TX_Done,state_tx,CLKS_PER_BIT=434)
     forceHi_inst = forceHi(w_TX_Serial,w_TX_Active,o_uart_tx)
- 
+    
     return instances()
 
 
 @block    
 def sdram_test_tb():
     clk, sdram_clk, sdram_return_clk, i_uart_rx,o_uart_tx = [Signal(bool(0)) for _ in range(5)]
-    w_RX_DV, o_TX_Done, w_TX_Active,w_TX_Serial = [Signal(bool(0)) for _ in range(4)]
-    w_RX_Byte = Signal(intbv(0)[8:])
-    state_tx = Signal(t_state_tx.TX_IDLE)
-    state_rx = Signal(t_state_rx.RX_IDLE)
-    dout = Signal(intbv(0)[8:])
-    dout_v = Signal(intbv(0)[8:])
-    din = Signal(intbv(0)[8:])
-    addr = Signal(intbv(0)[7:])
-    we = Signal(bool(0))
-    ram_inst = ram_1(dout, din, addr, we, clk, depth=32)
+ 
     @always_comb
     def sdram_clk_loopback():
         sdram_return_clk.next = sdram_clk
@@ -226,6 +219,7 @@ def sdram_test_tb():
             clk.next = not clk
             yield delay(1)
         pb.next = 1
+
         for _ in range(6000):
             clk.next = not clk
             yield delay(1)
@@ -235,7 +229,7 @@ def sdram_test_tb():
 
 
 if __name__ == '__main__':
-    #Simulation(traceSignals(sdram_test_tb)).run()
+ 
  
     clk, sdram_clk, sdram_return_clk = [Signal(bool(0)) for _ in range(3)]
  
@@ -244,8 +238,18 @@ if __name__ == '__main__':
     i_uart_rx = Signal(bool(0))
     o_uart_tx = Signal(bool(0))
     sd_intf_inst = sd_intf()
-     
+    
     sdram_test_inst = sdram_test(clk, sdram_clk, sdram_return_clk, led_status, i_uart_rx, o_uart_tx, pb, sd_intf_inst)
-    sdram_test_inst.convert()
+    sdram_test_inst.convert(hdl="Verilog", initial_values=False)
+    """
+    tb = sdram_test_tb()
+    tb.config_sim(trace=True)
+    tb.run_sim()
+    """
+   
+    
+
+    
+    
 
     

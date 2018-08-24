@@ -4,7 +4,7 @@ from __future__ import absolute_import
 from future import standard_library
 standard_library.install_aliases()
 from builtins import object
-from past.utils import old_div
+#from past.utils import old_div
 
 from myhdl import *
 from .sd_intf import sd_intf
@@ -16,7 +16,8 @@ commands = enum("COM_INHIBIT","NOP","ACTIVE","READ","WRITE","BURST_TERM", \
 states   = enum("Uninitialized","Initialized","Idle","Activating","Active","Read","Reading","Read_rdy","Write","Writing")
 
 # generic parameters
-FREQ_GHZ_G       = old_div(sd_intf.SDRAM_FREQ_C, 1000)
+#FREQ_GHZ_G       = old_div(sd_intf.SDRAM_FREQ_C, 1000)
+FREQ_GHZ_G       = (sd_intf.SDRAM_FREQ_C / 1000)
 ENABLE_REFRESH_G = True
 NROWS_G          = sd_intf.SDRAM_NROWS_C
 T_REF_G          = sd_intf.SDRAM_T_REF_C
@@ -53,7 +54,9 @@ def sdram(clk,sd_intf,show_command=False):
     curr_state = [ State(0,sd_intf), State(1,sd_intf), State(2,sd_intf), State(3,sd_intf) ] # Represents the state of eah bank
 
     # refresh variables
-    REF_CYCLES_C = int(old_div(sd_intf.timing['ref'], sd_intf.SDRAM_FREQ_C)  )
+    #REF_CYCLES_C = int(old_div(sd_intf.timing['ref'], sd_intf.SDRAM_FREQ_C)  )
+    REF_CYCLES_C = int((sd_intf.timing['ref'] / sd_intf.SDRAM_FREQ_C)  )
+
     RFSH_COUNT_C = sd_intf.SDRAM_NROWS_C
     rfsh_timer = Signal(modbv(1,min=0,max=REF_CYCLES_C))
     rfsh_count = Signal(intbv(0,min=0,max=RFSH_COUNT_C))
@@ -189,7 +192,7 @@ def sdram(clk,sd_intf,show_command=False):
             curr_state[bs.val].active_row  = None
 
     return instances()
-
+@block
 def Control_Logic(curr_command,sd_intf):
 
     @always_comb

@@ -8,7 +8,7 @@ def uart_rx(i_Clock,i_RX_Serial,o_RX_DV,o_RX_Byte,state_rx,CLKS_PER_BIT=868):
 	r_RX_DV = Signal(bool(0))
 	r_Clock_Count = Signal(intbv(0)[12:])
 	r_RX_data = Signal(intbv(0)[8:])
-	r_RX_Byte = Signal(intbv(0)[8:])
+	#r_RX_Byte = Signal(intbv(0)[8:])
 	r_Bit_Index = Signal(intbv(0)[3:])
 	 
 	@always(i_Clock.posedge)
@@ -47,7 +47,7 @@ def uart_rx(i_Clock,i_RX_Serial,o_RX_DV,o_RX_Byte,state_rx,CLKS_PER_BIT=868):
 				state_rx.next = t_state_rx.RX_DATA_BITS
 			else:
 				r_Clock_Count.next = 0
-				r_RX_Byte[r_Bit_Index].next = i_RX_Serial
+				o_RX_Byte.next[r_Bit_Index]  = i_RX_Serial
 				if (r_Bit_Index < 7):
 					r_Bit_Index.next = r_Bit_Index + 1
 					state_rx.next = t_state_rx.RX_DATA_BITS
@@ -76,7 +76,7 @@ def uart_rx(i_Clock,i_RX_Serial,o_RX_DV,o_RX_Byte,state_rx,CLKS_PER_BIT=868):
 		else:
 			state_rx.next = t_state_rx.RX_IDLE
 		o_RX_DV.next = r_RX_DV
-		o_RX_Byte.next = r_RX_Byte
+		#o_RX_Byte.next = r_RX_Byte
 
 	return recv
 
