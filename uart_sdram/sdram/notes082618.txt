@@ -1,0 +1,107 @@
+08/26/18
+sdram_tests/uart_sdram/sdram/sdram_test_uart.py
+when simulation the #MAX_ADDRESS = 0x000FF needs to be uncommeted
+MAX_ADDRESS = 0xFFFFFF this so the sim run quicker.
+
+	#MAX_ADDRESS = 0x000FF 
+	#for simulation the is made smaller
+	MAX_ADDRESS = 0xFFFFFF
+pi@mypi3-5:~/sdram_tests/uart_sdram/sdram $ python sdram_test_uart.py	
+line 72 sdram_test.v reg [2:0] state_tx=0; -> reg [2:0] state_tx=0;
+make 
+
+pi@mypi3-5:~/sdram_tests/uart_sdram/sdram $ sudo config_cat sdram_test.bin
+sudo minicom -s
+CTL/A Z W lineWrap on/off....W	
+1 22222222 333333 is sent over the uart at 1MBaud
+
+
+mv sdram_tests sdram_tests082118
+git clone https://github.com/develone/sdram_tests.git
+ 
+
+ 
+
+
+python test_old_div.py 
+w/ old_div 0.05
+w/ / 0.05
+w/ old_div 1280000
+w/ / 1280000
+
+08/24/18
+mypi3-4
+python sdram_test.py
+sdram_test_inst.convert(hdl="Verilog", initial_values=False) will not create a verilog file with 
+initial_values=True
+mv sdram_tests sdram_tests082118
+git clone https://github.com/develone/sdram_tests.git
+needed to add to sdram_test_tb section for simulation to procede further
++@block
+ def Control_Logic(curr_command,sd_intf):
+not using old_div
+scp mypi3-5:~/sdram_tests/sdram_noled/sdram/sdram_test_rxtx_ram/test_old_div.py .
+python test_old_div.py 
+w/ old_div 0.05
+w/ / 0.05
+w/ old_div 1280000
+w/ / 1280000
+
+git clone https://github.com/develone/sdram_tests.git
+cd sdram_tests/sdram_noled/sdram/sdram_test_rxtx_ram/
+scp mypi3-5:~/sdram_tests/sdram_noled/sdram/sdram_test_rxtx_ram/sdram_test.py .
+scp mypi3-5:~/sdram_tests/sdram_noled/sdram/sdram_test_rxtx_ram/uart_rx.py .
+The simulation would produce the following error but the verilog would work just
+required the initialization of the 
+reg [2:0] state_rx; -> reg [2:0] state_rx=0;
+reg [2:0] state_tx; -> reg [2:0] state_tx=0;
+myhdl AttributeError: 'bool' object has no attribute 'next'
+http://discourse.myhdl.org/t/intbv-single-bit-modification/152
+cp ~/sdram_tests082118/sdram_noled/sdram/sdram_test_rxtx_ram/uart_rx.py .
+-       r_RX_Byte = Signal(intbv(0)[8:])
++       #r_RX_Byte = Signal(intbv(0)[8:])
+
+-                               r_RX_Byte[r_Bit_Index].next = i_RX_Serial
++                               o_RX_Byte.next[r_Bit_Index]  = i_RX_Serial
+
+-               o_RX_Byte.next = r_RX_Byte
++               #o_RX_Byte.next = r_RX_Byte
+
+
+cd SDRAM_Controller
+scp mypi3-5:~/sdram_tests/sdram_noled/sdram/sdram_test_rxtx_ram/SDRAM_Controller/sdram.py .
+scp mypi3-5:~/sdram_tests/sdram_noled/sdram/sdram_test_rxtx_ram/SDRAM_Controller/sd_intf.py .
+rmoved from recvtoram import * from sdram_test.py
+
+modified lines 70 & 73 w/out these modifications the echo of characters does not work
+reg [2:0] state_rx; -> reg [2:0] state_rx=0;
+reg [2:0] state_tx; -> reg [2:0] state_tx=0;
+make
+Note the chges done when freq reduced from 100MHz to 50 MHz
+SDRAM_FREQ_C                 = 100.0 to SDRAM_FREQ_C                 = 50.0
+-reg [9:0] SdramCntl0_refTimer_r;
++reg [8:0] SdramCntl0_refTimer_r;
+-reg [10:0] SdramCntl0_timer_r;
++reg [9:0] SdramCntl0_timer_r;
+-reg [2:0] SdramCntl0_rasTimer_x;
+-reg [2:0] SdramCntl0_rasTimer_r;
++reg [1:0] SdramCntl0_rasTimer_x;
++reg [1:0] SdramCntl0_rasTimer_r;
+-        SdramCntl0_refTimer_x = 782;
++        SdramCntl0_refTimer_x = 391;
+-                SdramCntl0_timer_x = 2000;
++                SdramCntl0_timer_x = 1000;
+-                SdramCntl0_timer_x = 2;
++                SdramCntl0_timer_x = 1;
+-                SdramCntl0_timer_x = 7;
++                SdramCntl0_timer_x = 4;
+-                        SdramCntl0_timer_x = 2;
++                        SdramCntl0_timer_x = 1;
+-                                SdramCntl0_timer_x = 2;
++                                SdramCntl0_timer_x = 1;
+-                SdramCntl0_rasTimer_x = 5;
++                SdramCntl0_rasTimer_x = 3;
+-                SdramCntl0_timer_x = 7;
++                SdramCntl0_timer_x = 4;
+-        SdramCntl0_refTimer_r <= 782;
++        SdramCntl0_refTimer_r <= 391;
